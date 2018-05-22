@@ -1,0 +1,39 @@
+{% extends 'remiel_admin/base.html' %}
+{% load static %}
+{% block content %}
+
+ <div class="container">
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="panel">
+                                    <header class="panel-heading">
+                                        <div class="panel-actions">
+                                            <a href="#" class="panel-action panel-action-toggle" data-panel-toggle=""></a>
+                                            <a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss=""></a>
+                                        </div>
+                                        <h2 class="panel-title">Upload Evident <span class="helping-text">Drag & drop file upload</span></h2>
+
+                                    </header>
+                                    <div class="panel-body">
+                                        <form id="my-awesome-dropzone"   action="{% url 'dash:upload_evidence' match.pk %}" class="dropzone">
+                                            {% csrf_token %}
+                                            <a href="{% url 'dash:match' %}" class="btn btn-primary rounded pull-right">Back</a>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+ {% endblock %}
+
+{% block scripts %}
+
+<!-- DROPZONE -->
+        <script src="{% static 'assets/plugins/dropzone/dropzone.js'  %} "></script>
+        <script>
+
+        </script>
+{% endblock %}

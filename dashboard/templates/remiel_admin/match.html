@@ -1,0 +1,271 @@
+{% extends 'remiel_admin/base.html' %}
+{% block content %}
+
+                <!--start main content-->
+
+                    <div class="container">
+                    	 {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{message.tags}} alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                  <strong>{{message}}</strong>
+                </div>
+                {%endfor%}
+              {% endif %}
+
+
+                       {% if request.user.is_staff %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                     <div class="panel">
+                                    <header class="panel-heading">
+                                        <h2 class="panel-title">Admin Functions</h2>
+                                    </header>
+                                         <div class="panel-body">
+                                             <div class="row">
+                                                 <div class="col-md-4">
+                                                     <a href="/office/matchadmin" class="btn btn-info">Match Me</a>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+
+
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                     <div class="panel">
+                                    <header class="panel-heading">
+                                        <h2 class="panel-title">Receive Matches</h2>
+                                    </header>
+                                    <div class="panel-body">
+                                      <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>from</th>
+                                            <th>Amount</th>
+                                            <th>Bitcoin Value</th>
+                                            <th>Status</th>
+                                            <th>Proof</th>
+                                            <th>Expiry Date</th>
+                                            <th>Action</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for match in arm %}
+											<tr>
+
+                                              <td><a data-url="{% url 'dash:ajax_user' match.payer.pk%}" class="js_modal" href="#">{{match.payer.username}}</a></td>
+											  <td>{{match.plan.amount}}</td>
+											  <td>{{match.bitcoin_value|floatformat:8}}</td>
+											  <td>{{match.status}}</td>
+                                               {% if match.evidence_set.all %}<td ><a href="#" data-url="{% url 'dash:ajax_evidence'%}?match_id={{match.pk}}"  class="js_modal" match_id="{{match.id}}">View Evidence of payment</a></td>{% else %} <td>No proof of payment yet</td>{% endif %}
+											  <td>{{match.expiry_date}}</td>
+                                                <td>{% if match.evidence_set.all %}<button data-toggle="modal" data-target="#confirmmodal" data-url="{% url 'dash:ajax_action' %}?match_id={{match.pk}}&action=Complete"  class="js_action btn btn-primary" id="accept_apyment"  >Accept Payment</button>{% else %} No  payment yet{% endif %}
+                                                 {% if match.grace %}<button data-toggle="modal" data-target="#confirmmodal" data-url="{% url 'dash:ajax_action' %}?match_id={{match.pk}}&action=Extend"  class="js_action btn btn-warning"  >Extend Payment</button>{% endif %}
+                                                </td>
+                                            </tr>
+											{% endfor %}
+                                    </tbody>
+                                   </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 <hr>
+                  <div class="row">
+                                <div class="col-md-12">
+                                     <div class="panel">
+                                    <header class="panel-heading">
+                                        <h2 class="panel-title">Pay Order</h2>
+                                        <a href="{% url 'dash:request_match'%}" class="btn btn-success pull-right">Request For Match </a>
+                                    </header>
+                                    <div class="panel-body">
+                                      <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>To</th>
+                                            <th>Amount</th>
+                                            <th>Bitcoin Value</th>
+                                            <th>Status</th>
+                                            <th>Proof</th>
+                                            <th>Expiry Date</th>
+                                            <th>Action</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for match in apm %}
+											<tr>
+
+                                             {% if match.status == 'Waiting For Match' %}<td>No match Yet</td>{% else %}  <td><a data-url="{% url 'dash:ajax_user' match.receiver.pk%}" class="js_modal" href="#">{{match.receiver.username}}</a></td>{% endif %}
+											  <td>{{match.plan.amount}}</td>
+											  <td>{{match.bitcoin_value|floatformat:8}}</td>
+											  <td>{{match.status}}</td>
+                                                <td ><a href="#" data-url="{% url 'dash:ajax_evidence'%}?match_id={{match.pk}}"  class="js_modal" match_id="{{match.id}}">View Evidence of payment</a></td>
+											  <td>{{match.expiry_date}}</td>
+                                               {% if match.status == 'Waiting For Match' %}<td>No match Yet</td>{% else %}  <td><a  class=" btn btn-primary"  href="{% url 'dash:upload_evidence' match.pk %}">Upload Evident</a>{% endif %}
+
+                                                </td>
+                                            </tr>
+											{% endfor %}
+                                    </tbody>
+                                   </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                                <div class="col-md-12">
+                                     <div class="panel">
+                                    <header class="panel-heading">
+                                        <h2 class="panel-title">Active Investment</h2>
+                                    </header>
+                                    <div class="panel-body">
+                                      <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+
+                                            <th>Amount ($)</th>
+
+                                            <th>Status</th>
+                                            <th>Date Added</th>
+
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for inv in ainv %}
+											<tr>
+
+                                              <td>{{inv.plan.amount}}</td>
+											  <td>{{inv.status}}</td>
+                                              <td>{{inv.maturity_date}}</td>
+
+
+                                            </tr>
+											{% endfor %}
+                                    </tbody>
+                                   </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+        <div id="datamodal" class="modal fade" role="dialog">
+
+               <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+
+                </div>
+
+               </div>
+             </div>
+	    </div>
+
+        <div id="confirmmodal" class="modal fade" role="dialog">
+
+               <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4>Confirm Payment </h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to <span class="js-action-text"></span> ?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="js-action-button" data-url="">Accept</button>
+                    </div>
+
+                </div>
+
+               </div>
+             </div>
+	    </div>
+
+
+                    {% endblock %}
+
+                    {% block scripts %}
+	<script>
+
+
+$('.js_action').click(function(){
+    match_id=$(this).attr('match_id');
+    url=$(this).attr('data-url');
+   $('.js-action-button').attr('data-url', url)
+    $('.js-action-button').text($(this).text());
+   $('.js-action-text').text($(this).text());
+
+  })
+
+$('.js-action-button').click(function(){
+    url=$(this).attr('data-url');
+    $.get(url, function(){})
+        .done( function(data){
+            console.log('shit')
+            window.location=data.redirect_url;
+        })
+})
+
+var loadContent = function () {
+    var btn = $(this);
+    $.ajax({
+        url: btn.attr("data-url"),
+        type: 'get',
+        dataType: 'json',
+        beforeSend: function () {
+            $("#datamodal").modal("show");
+        },
+        success: function (data) {
+            console.log(data);
+            $("#datamodal .modal-content").html(data.html_data);
+
+        }
+    });
+
+};
+$(".js_modal").click(loadContent);
+</script>
+{% endblock %}

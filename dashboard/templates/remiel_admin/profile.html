@@ -1,0 +1,64 @@
+{% extends 'remiel_admin/base.html' %}
+{% block content %}
+                    <div class="container">
+                     
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="panel">
+                                    <header class="panel-heading">
+                                     
+                                        <h2 class="panel-title">Edit Profile</h2>
+                                   </header>
+                                    <div class="panel-body">
+                                        <form method="post" role="form">
+                                             {%csrf_token %}
+                                            <div class="form-group">
+                                                <label>First Name</label>  
+                                                {{userform.first_name}}
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Last Name</label>  
+                                                {{userform.last_name}}
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Email</label>  
+                                                {{userform.email}}
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Username</label>  
+                                                {{userform.username}}
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Mobile No</label>  
+                                                {{profileform.phone}}
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label>Profile Picture</label>
+                                               {{profileform.picture}}
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Bitcoin Address</label>
+                                                {{profileform.bit_address}}
+                                            </div>
+
+                                            <div class="pull-right">
+                                                <button type="submit" class="btn btn-success rounded">Save</button>
+                                            </div>
+
+
+
+                                            
+                                        </form>    
+                                    </div>
+                                </div>
+                            </div>
+                             
+                             
+                        </div>
+                    </div>
+
+                    <!--footer start-->
+                    {% endblock %}

@@ -1,0 +1,24 @@
+                                                <div role="tabpanel" class="tab-pane" id="gallery">
+                                                    <div class="row">
+                                                        {% for evidence in evidences %}
+                                                        <div class="col-md-3 col-sm-6">
+                                                            <a class="gallery-box" href="{{evidence.proof.url}}" data-lightbox="gallery">
+                                                                <img src="{{evidence.proof.url}}" alt="" class="img-responsive">
+                                                                <div class="gallery-overlay">
+                                                                    <i class="ion-ios-eye-outline"></i>
+                                                                </div>
+                                                            </a>
+                                                            {% empty %}
+
+                                                        </div>
+                                                        <p>No Evidence Of Payment Yet</p>
+
+                                                        {% endfor %}
+
+
+
+                                                    </div>
+
+
+
+                                                </div>
